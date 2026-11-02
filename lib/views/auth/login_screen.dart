@@ -87,182 +87,187 @@ class _LoginScreenState extends State<LoginScreen> {
       defaultValue: 20.0,
     );
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          children: [
-            // Top Wavy Coral Header with Topography Lines (Adaptive height via MediaQuery)
-            WavyHeader(height: headerH),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              // Top Wavy Coral Header with Topography Lines (Adaptive height via MediaQuery)
+              WavyHeader(height: headerH),
 
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: ResponsiveLayout.maxContentWidth,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: horizontalPad),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 8),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: ResponsiveLayout.maxContentWidth,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 8),
 
-                        // "Sign in" Header with accent line
-                        const AuthHeaderTitle(title: AppStrings.signInHeader),
-                        SizedBox(height: verticalSpacing * 1.2),
+                          // "Sign in" Header with accent line
+                          const AuthHeaderTitle(title: AppStrings.signInHeader),
+                          SizedBox(height: verticalSpacing * 1.2),
 
-                        // Email or Mobile Field
-                        CustomTextField(
-                          controller: _identifierController,
-                          label: AppStrings.identifierLabel,
-                          hint: AppStrings.identifierHint,
-                          prefixIcon: Icons.mail_outline_rounded,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          validator: Validators.validateIdentifier,
-                          onFieldSubmitted: (_) =>
-                              _passwordFocus.requestFocus(),
-                        ),
-                        SizedBox(height: verticalSpacing),
+                          // Email or Mobile Field
+                          CustomTextField(
+                            controller: _identifierController,
+                            label: AppStrings.identifierLabel,
+                            hint: AppStrings.identifierHint,
+                            prefixIcon: Icons.mail_outline_rounded,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            validator: Validators.validateIdentifier,
+                            onFieldSubmitted: (_) =>
+                                _passwordFocus.requestFocus(),
+                          ),
+                          SizedBox(height: verticalSpacing),
 
-                        // Password Field with Show/Hide toggle
-                        CustomTextField(
-                          controller: _passwordController,
-                          focusNode: _passwordFocus,
-                          label: AppStrings.passwordLabel,
-                          hint: AppStrings.passwordHint,
-                          prefixIcon: Icons.lock_outline_rounded,
-                          isPassword: true,
-                          textInputAction: TextInputAction.done,
-                          validator: (val) {
-                            if (val == null || val.isEmpty) {
-                              return AppStrings.requiredField;
-                            }
-                            return null;
-                          },
-                          onFieldSubmitted: (_) => _handleLogin(),
-                        ),
-                        const SizedBox(height: 14),
+                          // Password Field with Show/Hide toggle
+                          CustomTextField(
+                            controller: _passwordController,
+                            focusNode: _passwordFocus,
+                            label: AppStrings.passwordLabel,
+                            hint: AppStrings.passwordHint,
+                            prefixIcon: Icons.lock_outline_rounded,
+                            isPassword: true,
+                            textInputAction: TextInputAction.done,
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return AppStrings.requiredField;
+                              }
+                              return null;
+                            },
+                            onFieldSubmitted: (_) => _handleLogin(),
+                          ),
+                          const SizedBox(height: 14),
 
-                        // Remember Me and Forgot Password Row
-                        Wrap(
-                          alignment: WrapAlignment.spaceBetween,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          runSpacing: 8,
-                          children: [
-                            // Remember me checkbox
-                            InkWell(
-                              onTap: () {
-                                authProvider.toggleRememberMe(
-                                  !authProvider.rememberMe,
-                                );
-                              },
-                              borderRadius: BorderRadius.circular(6),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: Checkbox(
-                                      value: authProvider.rememberMe,
-                                      onChanged: authProvider.toggleRememberMe,
-                                      activeColor: AppColors.primary,
-                                      side: const BorderSide(
-                                        color: AppColors.primary,
-                                        width: 1.5,
+                          // Remember Me and Forgot Password Row
+                          Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            runSpacing: 8,
+                            children: [
+                              // Remember me checkbox
+                              InkWell(
+                                onTap: () {
+                                  authProvider.toggleRememberMe(
+                                    !authProvider.rememberMe,
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(6),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: Checkbox(
+                                        value: authProvider.rememberMe,
+                                        onChanged:
+                                            authProvider.toggleRememberMe,
+                                        activeColor: AppColors.primary,
+                                        side: const BorderSide(
+                                          color: AppColors.primary,
+                                          width: 1.5,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    AppStrings.rememberMe,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: AppColors.textPrimary,
-                                      fontWeight: FontWeight.w500,
+                                    const SizedBox(width: 8),
+                                    const Text(
+                                      AppStrings.rememberMe,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: AppColors.textPrimary,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // Forgot Password link
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ForgotPasswordScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                AppStrings.forgotPassword,
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: verticalSpacing * 1.5),
 
-                        // Sign In Action Button
-                        CustomButton(
-                          text: AppStrings.loginButton,
-                          isLoading: authProvider.isLoading,
-                          onPressed: authProvider.isLoading
-                              ? null
-                              : _handleLogin,
-                        ),
-                        SizedBox(height: verticalSpacing * 1.6),
-
-                        // Footer: "Don't have an Account ? Sign up"
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            const Text(
-                              AppStrings.dontHaveAccount,
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const RegisterScreen(),
+                              // Forgot Password link
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const ForgotPasswordScreen(),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  AppStrings.forgotPassword,
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                );
-                              },
-                              child: const Text(
-                                AppStrings.signUp,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: verticalSpacing * 1.5),
+
+                          // Sign In Action Button
+                          CustomButton(
+                            text: AppStrings.loginButton,
+                            isLoading: authProvider.isLoading,
+                            onPressed: authProvider.isLoading
+                                ? null
+                                : _handleLogin,
+                          ),
+                          SizedBox(height: verticalSpacing * 1.6),
+
+                          // Footer: "Don't have an Account ? Sign up"
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              const Text(
+                                AppStrings.dontHaveAccount,
                                 style: TextStyle(
-                                  color: AppColors.primary,
+                                  color: AppColors.textSecondary,
                                   fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 28),
-                      ],
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const RegisterScreen(),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  AppStrings.signUp,
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 28),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
