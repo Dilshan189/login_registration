@@ -5,6 +5,7 @@ import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/utils/responsive_layout.dart';
+import '../../core/utils/snackbar_helper.dart';
 import '../auth/login_screen.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/wavy_header.dart';
@@ -14,7 +15,6 @@ class HomeScreen extends StatelessWidget {
 
   Future<void> _performLogout(BuildContext context) async {
     final nav = Navigator.of(context, rootNavigator: true);
-    final messenger = ScaffoldMessenger.of(context);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     await authProvider.logout();
@@ -24,36 +24,7 @@ class HomeScreen extends StatelessWidget {
       (route) => false,
     );
 
-    messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(
-      SnackBar(
-        content: const Row(
-          children: [
-            Icon(
-              Icons.check_circle_outline_rounded,
-              color: Colors.white,
-              size: 20,
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Signed out successfully.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.success,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-        duration: const Duration(milliseconds: 2000),
-      ),
-    );
+    SnackBarHelper.showSuccess(null, AppStrings.logoutSuccess);
   }
 
   void _showLogoutDialog(BuildContext context) {

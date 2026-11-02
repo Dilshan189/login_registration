@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'controllers/auth_provider.dart';
 import 'core/constants/app_strings.dart';
 import 'core/constants/app_theme.dart';
+import 'core/utils/snackbar_helper.dart';
 import 'views/auth/login_screen.dart';
 import 'views/home/home_screen.dart';
 
@@ -29,6 +30,7 @@ class AuthFlowApp extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return MaterialApp(
+      scaffoldMessengerKey: SnackBarHelper.messengerKey,
       title: AppStrings.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,

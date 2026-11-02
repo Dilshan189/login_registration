@@ -70,8 +70,9 @@ class AppStrings {
       'Account created successfully! Welcome aboard.';
   static const String resetSuccess =
       'Password reset instructions have been sent to your inbox/phone.';
+  static const String logoutSuccess = 'Logout successfully';
   static const String logoutConfirmTitle = 'Log Out';
   static const String logoutConfirmMessage =
-      'Are you sure you want to sign out of your account?';
+      'Are you sure you want to log out of your account?';
   static const String cancel = 'Cancel';
 }
