@@ -76,106 +76,107 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          children: [
-            // Top Wavy Header with back button (Adaptive via MediaQuery)
-            WavyHeader(
-              height: headerH,
-              child: SafeArea(
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top: 4.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.chevron_left_rounded,
-                        color: Colors.white,
-                        size: 34,
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              // Top Wavy Header with back button (Adaptive via MediaQuery)
+              WavyHeader(
+                height: headerH,
+                child: SafeArea(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.chevron_left_rounded,
+                          color: Colors.white,
+                          size: 34,
+                        ),
+                        tooltip: 'Back',
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
-                      tooltip: 'Back',
-                      onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: ResponsiveLayout.maxContentWidth,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: horizontalPad),
-                  child: _submitted
-                      ? _buildSuccessView(context)
-                      : Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              const SizedBox(height: 8),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: ResponsiveLayout.maxContentWidth,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+                    child: _submitted
+                        ? _buildSuccessView(context)
+                        : Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const SizedBox(height: 8),
 
-                              const AuthHeaderTitle(
-                                title: 'Forgot Password',
-                                lineWidth: 60,
-                              ),
-                              const SizedBox(height: 12),
-                              const Text(
-                                'Enter your registered email address or mobile number to receive password recovery instructions.',
-                                style: TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 14,
-                                  height: 1.5,
+                                const AuthHeaderTitle(
+                                  title: 'Forgot Password',
+                                  lineWidth: 60,
                                 ),
-                              ),
-                              SizedBox(height: verticalSpacing * 1.3),
+                                const SizedBox(height: 12),
+                                const Text(
+                                  'Enter your registered email address or mobile number to receive password recovery instructions.',
+                                  style: TextStyle(
+                                    color: AppColors.textSecondary,
+                                    fontSize: 14,
+                                    height: 1.5,
+                                  ),
+                                ),
+                                SizedBox(height: verticalSpacing * 1.3),
 
-                              CustomTextField(
-                                controller: _identifierController,
-                                label: 'Email or Mobile',
-                                hint: 'densa@email.com',
-                                prefixIcon: Icons.mail_outline_rounded,
-                                keyboardType: TextInputType.emailAddress,
-                                textInputAction: TextInputAction.done,
-                                validator: Validators.validateIdentifier,
-                                onFieldSubmitted: (_) => _handleResetPassword(),
-                              ),
-                              SizedBox(height: verticalSpacing * 1.6),
+                                CustomTextField(
+                                  controller: _identifierController,
+                                  label: 'Email or Mobile',
+                                  hint: 'densa@email.com',
+                                  prefixIcon: Icons.mail_outline_rounded,
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.done,
+                                  validator: Validators.validateIdentifier,
+                                  onFieldSubmitted: (_) =>
+                                      _handleResetPassword(),
+                                ),
+                                SizedBox(height: verticalSpacing * 1.6),
 
-                              CustomButton(
-                                text: 'Send Reset Link',
-                                isLoading: authProvider.isLoading,
-                                onPressed: authProvider.isLoading
-                                    ? null
-                                    : _handleResetPassword,
-                              ),
-                              SizedBox(height: verticalSpacing * 1.2),
+                                CustomButton(
+                                  text: 'Send Reset Link',
+                                  isLoading: authProvider.isLoading,
+                                  onPressed: authProvider.isLoading
+                                      ? null
+                                      : _handleResetPassword,
+                                ),
+                                SizedBox(height: verticalSpacing * 1.2),
 
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () => Navigator.of(context).pop(),
-                                  child: const Text(
-                                    AppStrings.backToLogin,
-                                    style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                                Center(
+                                  child: GestureDetector(
+                                    onTap: () => Navigator.of(context).pop(),
+                                    child: const Text(
+                                      AppStrings.backToLogin,
+                                      style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 28),
-                            ],
+                                const SizedBox(height: 28),
+                              ],
+                            ),
                           ),
-                        ),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
