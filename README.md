@@ -78,7 +78,6 @@ lib/
     │   ├── custom_button.dart         # Reusable rounded button with loading indicator
     │   ├── custom_text_field.dart     # Reusable input field with prefix icon, divider & toggle
     │   ├── password_strength_meter.dart # Dynamic password strength bar & rule checklist
-    │   ├── social_auth_divider.dart   # Social sign-in divider (Google, Apple, GitHub)
     │   └── wavy_header.dart           # S-curve wave header with topographic contour lines
     ├── auth/
     │   ├── login_screen.dart          # Responsive Login view
