@@ -62,7 +62,7 @@ lib/
 │   │   └── app_theme.dart             # Material 3 theme, input decoration & button styling
 │   └── utils/
 │       ├── responsive_layout.dart     # MediaQuery breakpoints, adaptive header height & padding
-│       ├── snackbar_helper.dart       # Floating notification snackbars (Success, Error, Info, Warning)
+│       ├── snackbar_helper.dart       # Floating notification snackbars (Success, Error) with 2s auto-dismiss
 │       └── validators.dart            # Form input regex & password strength logic
 ├── models/
 │   ├── api_response.dart              # Generic API response wrapper (success/failure, status codes)
@@ -132,8 +132,8 @@ You can test authentication using these credentials:
 ### Steps to Run
 ```bash
 # 1. Clone repository
-git clone <repo-url>
-cd login_resistration
+git clone https://github.com/Dilshan189/login_registration.git
+cd login_registration
 
 # 2. Install dependencies
 flutter pub get
