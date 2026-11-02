@@ -22,9 +22,14 @@ void main() async {
   );
 }
 
-class AuthFlowApp extends StatelessWidget {
+class AuthFlowApp extends StatefulWidget {
   const AuthFlowApp({super.key});
 
+  @override
+  State<AuthFlowApp> createState() => _AuthFlowAppState();
+}
+
+class _AuthFlowAppState extends State<AuthFlowApp> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
