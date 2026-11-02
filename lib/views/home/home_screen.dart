@@ -8,9 +8,14 @@ import '../../core/utils/snackbar_helper.dart';
 import '../auth/login_screen.dart';
 import '../widgets/custom_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -42,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                 final authProvider = Provider.of<AuthProvider>(context, listen: false);
                 await authProvider.logout();
                 if (context.mounted) {
-                  SnackBarHelper.showInfo(context, 'Signed out successfully.');
+                  SnackBarHelper.showSuccess(context, 'Signed out successfully.');
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (_) => const LoginScreen()),
                     (route) => false,

@@ -71,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     if (!_agreeToTerms) {
-      SnackBarHelper.showWarning(context, AppStrings.termsRequired);
+      SnackBarHelper.showError(context, AppStrings.termsRequired);
       return;
     }
 

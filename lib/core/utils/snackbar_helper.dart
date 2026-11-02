@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 
 class SnackBarHelper {
+  /// Green SnackBar for Success scenarios
   static void showSuccess(BuildContext context, String message) {
     _showSnackBar(
       context: context,
@@ -11,6 +12,7 @@ class SnackBarHelper {
     );
   }
 
+  /// Red SnackBar for all Errors, Warnings & Invalid actions
   static void showError(BuildContext context, String message) {
     _showSnackBar(
       context: context,
@@ -20,44 +22,28 @@ class SnackBarHelper {
     );
   }
 
-  static void showInfo(BuildContext context, String message) {
-    _showSnackBar(
-      context: context,
-      message: message,
-      backgroundColor: AppColors.info,
-      icon: Icons.info_outline_rounded,
-    );
-  }
-
-  static void showWarning(BuildContext context, String message) {
-    _showSnackBar(
-      context: context,
-      message: message,
-      backgroundColor: AppColors.warning,
-      icon: Icons.warning_amber_rounded,
-    );
-  }
-
   static void _showSnackBar({
     required BuildContext context,
     required String message,
     required Color backgroundColor,
     required IconData icon,
   }) {
+    // Clear any previous snackbar immediately
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 22),
-            const SizedBox(width: 12),
+            Icon(icon, color: Colors.white, size: 20),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 message,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -68,17 +54,10 @@ class SnackBarHelper {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        duration: const Duration(seconds: 4),
-        action: SnackBarAction(
-          label: 'DISMISS',
-          textColor: Colors.white,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        // Auto-dismisses quickly within 2 seconds
+        duration: const Duration(milliseconds: 2000),
       ),
     );
   }
 }
-
