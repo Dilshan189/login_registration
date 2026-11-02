@@ -105,28 +105,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final horizontalPad = ResponsiveLayout.horizontalPadding(context);
-    final headerH = ResponsiveLayout.headerHeight(context, defaultRatio: 0.22);
-    final verticalSpacing = ResponsiveLayout.verticalSpacing(context, defaultValue: 18.0);
+    final headerH = (MediaQuery.sizeOf(context).height * 0.14).clamp(90.0, 120.0);
+    final fieldGap = (MediaQuery.sizeOf(context).height * 0.012).clamp(6.0, 10.0);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
+        // Non-scrollable: fixed single screen without scrolling
+        physics: const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
-            // Top Wavy Header with back chevron '<' button (Adaptive via MediaQuery)
+            // Compact Header with back chevron '<' button
             WavyHeader(
               height: headerH,
               child: SafeArea(
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                    padding: const EdgeInsets.only(left: 6.0, top: 2.0),
                     child: IconButton(
                       icon: const Icon(
                         Icons.chevron_left_rounded,
                         color: Colors.white,
-                        size: 34,
+                        size: 32,
                       ),
                       tooltip: 'Back',
                       onPressed: () => Navigator.of(context).pop(),
@@ -147,12 +148,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const SizedBox(height: 8),
-
-                        // "Sign up" Header with accent line
-                        const AuthHeaderTitle(title: AppStrings.signUpHeader),
-                        SizedBox(height: verticalSpacing * 1.1),
+                        // "Register" Header with accent line
+                        const AuthHeaderTitle(
+                          title: AppStrings.signUpHeader,
+                          fontSize: 26,
+                          lineWidth: 36,
+                        ),
+                        SizedBox(height: fieldGap),
 
                         // Full Name
                         CustomTextField(
@@ -165,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: Validators.validateFullName,
                           onFieldSubmitted: (_) => _emailFocus.requestFocus(),
                         ),
-                        SizedBox(height: verticalSpacing),
+                        SizedBox(height: fieldGap),
 
                         // Email Address
                         CustomTextField(
@@ -179,7 +183,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: Validators.validateEmail,
                           onFieldSubmitted: (_) => _mobileFocus.requestFocus(),
                         ),
-                        SizedBox(height: verticalSpacing),
+                        SizedBox(height: fieldGap),
 
                         // Mobile Number
                         CustomTextField(
@@ -193,7 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: Validators.validateMobile,
                           onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
                         ),
-                        SizedBox(height: verticalSpacing),
+                        SizedBox(height: fieldGap),
 
                         // Password
                         CustomTextField(
@@ -208,9 +212,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onFieldSubmitted: (_) => _confirmPasswordFocus.requestFocus(),
                         ),
 
-                        // Real-time password strength meter
+                        // Compact real-time password strength meter
                         PasswordStrengthMeter(password: _currentPasswordText),
-                        SizedBox(height: verticalSpacing),
+                        SizedBox(height: fieldGap),
 
                         // Confirm Password
                         CustomTextField(
@@ -227,7 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           onFieldSubmitted: (_) => _handleRegister(),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: fieldGap * 0.8),
 
                         // Terms and Conditions checkbox
                         InkWell(
@@ -241,8 +245,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 22,
-                                height: 22,
+                                width: 20,
+                                height: 20,
                                 child: Checkbox(
                                   value: _agreeToTerms,
                                   onChanged: (val) {
@@ -270,17 +274,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ],
                           ),
                         ),
-                        SizedBox(height: verticalSpacing * 1.4),
+                        SizedBox(height: fieldGap * 1.6),
 
-                        // Sign Up Action Button
+                        // Register Action Button
                         CustomButton(
                           text: AppStrings.registerButton,
+                          height: 48,
                           isLoading: authProvider.isLoading,
                           onPressed: authProvider.isLoading ? null : _handleRegister,
                         ),
-                        SizedBox(height: verticalSpacing * 1.3),
+                        SizedBox(height: fieldGap * 1.4),
 
-                        // Footer: "Already have an Account ? Sign in"
+                        // Footer: "Already have an Account ? Login"
                         Wrap(
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,
@@ -289,7 +294,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               AppStrings.alreadyHaveAccount,
                               style: TextStyle(
                                 color: AppColors.textSecondary,
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -299,14 +304,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 AppStrings.signIn,
                                 style: TextStyle(
                                   color: AppColors.primary,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 28),
+                        const SizedBox(height: 12),
                       ],
                     ),
                   ),
