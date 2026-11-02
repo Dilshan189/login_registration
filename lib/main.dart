@@ -26,7 +26,7 @@ class AuthFlowApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return MaterialApp(
       title: AppStrings.appName,

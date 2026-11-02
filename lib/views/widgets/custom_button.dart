@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/constants/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
@@ -26,22 +27,19 @@ class CustomButton extends StatelessWidget {
     final isDisabled = onPressed == null || isLoading;
 
     if (isOutlined) {
-      return Container(
-        width: width ?? double.infinity,
-        height: height,
-        decoration: BoxDecoration(
+      return Material(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.primary, width: 1.5),
-          color: Colors.white,
+          side: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(14),
-            onTap: isDisabled ? null : onPressed,
-            child: Center(
-              child: _buildContent(textColor: AppColors.primary),
-            ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: isDisabled ? null : onPressed,
+          child: SizedBox(
+            width: width ?? double.infinity,
+            height: height,
+            child: Center(child: _buildContent(textColor: AppColors.primary)),
           ),
         ),
       );
@@ -70,9 +68,7 @@ class CustomButton extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
           onTap: isDisabled ? null : onPressed,
-          child: Center(
-            child: _buildContent(textColor: Colors.white),
-          ),
+          child: Center(child: _buildContent(textColor: Colors.white)),
         ),
       ),
     );
