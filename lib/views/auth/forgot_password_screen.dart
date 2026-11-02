@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/utils/responsive_layout.dart';
 import '../../core/utils/snackbar_helper.dart';
 import '../../core/utils/validators.dart';
 import '../widgets/auth_header_title.dart';
@@ -61,8 +62,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
-    final media = MediaQuery.of(context);
-    final isDesktop = media.size.width >= 600;
+    final horizontalPad = ResponsiveLayout.horizontalPadding(context);
+    final headerH = ResponsiveLayout.headerHeight(context, defaultRatio: 0.24);
+    final verticalSpacing = ResponsiveLayout.verticalSpacing(context, defaultValue: 20.0);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -70,9 +72,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
-            // Top Wavy Header with back button
+            // Top Wavy Header with back button (Adaptive via MediaQuery)
             WavyHeader(
-              height: isDesktop ? 200 : media.size.height * 0.25,
+              height: headerH,
               child: SafeArea(
                 child: Align(
                   alignment: Alignment.topLeft,
@@ -94,9 +96,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
             Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 440),
+                constraints: const BoxConstraints(
+                  maxWidth: ResponsiveLayout.maxContentWidth,
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                  padding: EdgeInsets.symmetric(horizontal: horizontalPad),
                   child: _submitted
                       ? _buildSuccessView(context)
                       : Form(
@@ -119,7 +123,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   height: 1.5,
                                 ),
                               ),
-                              const SizedBox(height: 28),
+                              SizedBox(height: verticalSpacing * 1.3),
 
                               CustomTextField(
                                 controller: _identifierController,
@@ -131,7 +135,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 validator: Validators.validateIdentifier,
                                 onFieldSubmitted: (_) => _handleResetPassword(),
                               ),
-                              const SizedBox(height: 32),
+                              SizedBox(height: verticalSpacing * 1.6),
 
                               CustomButton(
                                 text: 'Send Reset Link',
@@ -140,7 +144,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     ? null
                                     : _handleResetPassword,
                               ),
-                              const SizedBox(height: 24),
+                              SizedBox(height: verticalSpacing * 1.2),
 
                               Center(
                                 child: GestureDetector(

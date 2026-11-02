@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/utils/responsive_layout.dart';
 import '../../core/utils/snackbar_helper.dart';
 import '../auth/login_screen.dart';
 import '../widgets/custom_button.dart';
@@ -64,7 +65,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.currentUser;
-    final isMobile = MediaQuery.of(context).size.width < 600;
 
     final initials = (user?.fullName.isNotEmpty ?? false)
         ? user!.fullName
@@ -96,7 +96,7 @@ class HomeScreen extends StatelessWidget {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 20.0 : 40.0,
+              horizontal: ResponsiveLayout.horizontalPadding(context),
               vertical: 24.0,
             ),
             child: ConstrainedBox(

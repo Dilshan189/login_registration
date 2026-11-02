@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/utils/responsive_layout.dart';
 import '../../core/utils/snackbar_helper.dart';
 import '../../core/utils/validators.dart';
 import '../home/home_screen.dart';
@@ -103,8 +104,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
-    final media = MediaQuery.of(context);
-    final isDesktop = media.size.width >= 600;
+    final horizontalPad = ResponsiveLayout.horizontalPadding(context);
+    final headerH = ResponsiveLayout.headerHeight(context, defaultRatio: 0.22);
+    final verticalSpacing = ResponsiveLayout.verticalSpacing(context, defaultValue: 18.0);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -112,9 +114,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
-            // Top Wavy Header with back button
+            // Top Wavy Header with back chevron '<' button (Adaptive via MediaQuery)
             WavyHeader(
-              height: isDesktop ? 180 : media.size.height * 0.22,
+              height: headerH,
               child: SafeArea(
                 child: Align(
                   alignment: Alignment.topLeft,
@@ -136,9 +138,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 440),
+                constraints: const BoxConstraints(
+                  maxWidth: ResponsiveLayout.maxContentWidth,
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                  padding: EdgeInsets.symmetric(horizontal: horizontalPad),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -148,7 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         // "Sign up" Header with accent line
                         const AuthHeaderTitle(title: AppStrings.signUpHeader),
-                        const SizedBox(height: 22),
+                        SizedBox(height: verticalSpacing * 1.1),
 
                         // Full Name
                         CustomTextField(
@@ -161,7 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: Validators.validateFullName,
                           onFieldSubmitted: (_) => _emailFocus.requestFocus(),
                         ),
-                        const SizedBox(height: 18),
+                        SizedBox(height: verticalSpacing),
 
                         // Email Address
                         CustomTextField(
@@ -175,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: Validators.validateEmail,
                           onFieldSubmitted: (_) => _mobileFocus.requestFocus(),
                         ),
-                        const SizedBox(height: 18),
+                        SizedBox(height: verticalSpacing),
 
                         // Mobile Number
                         CustomTextField(
@@ -189,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: Validators.validateMobile,
                           onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
                         ),
-                        const SizedBox(height: 18),
+                        SizedBox(height: verticalSpacing),
 
                         // Password
                         CustomTextField(
@@ -206,7 +210,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         // Real-time password strength meter
                         PasswordStrengthMeter(password: _currentPasswordText),
-                        const SizedBox(height: 18),
+                        SizedBox(height: verticalSpacing),
 
                         // Confirm Password
                         CustomTextField(
@@ -266,7 +270,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 28),
+                        SizedBox(height: verticalSpacing * 1.4),
 
                         // Sign Up Action Button
                         CustomButton(
@@ -274,7 +278,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           isLoading: authProvider.isLoading,
                           onPressed: authProvider.isLoading ? null : _handleRegister,
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: verticalSpacing * 1.3),
 
                         // Footer: "Already have an Account ? Sign in"
                         Wrap(

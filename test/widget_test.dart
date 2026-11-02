@@ -207,5 +207,27 @@ void main() {
       expect(find.widgetWithText(CustomButton, AppStrings.registerButton), findsOneWidget);
       expect(find.text(AppStrings.termsNotice), findsOneWidget);
     });
+
+    testWidgets('Login and Register adapt to small phone and tablet screens without overflow', (tester) async {
+      // 1. Small compact screen (360x640)
+      tester.view.physicalSize = const Size(360, 640);
+      tester.view.devicePixelRatio = 1.0;
+
+      await tester.pumpWidget(createWidgetUnderTest(const LoginScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text(AppStrings.signInHeader), findsOneWidget);
+
+      await tester.pumpWidget(createWidgetUnderTest(const RegisterScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text(AppStrings.signUpHeader), findsOneWidget);
+
+      // 2. Tablet landscape screen (1280x800)
+      tester.view.physicalSize = const Size(1280, 800);
+      await tester.pumpWidget(createWidgetUnderTest(const LoginScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text(AppStrings.signInHeader), findsOneWidget);
+
+      addTearDown(tester.view.resetPhysicalSize);
+    });
   });
 }

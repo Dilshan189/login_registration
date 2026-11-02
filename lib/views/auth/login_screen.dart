@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/utils/responsive_layout.dart';
 import '../../core/utils/snackbar_helper.dart';
 import '../../core/utils/validators.dart';
 import '../home/home_screen.dart';
@@ -31,9 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _identifierController = TextEditingController(
-      text: authProvider.savedIdentifier,
-    );
+    _identifierController = TextEditingController(text: authProvider.savedIdentifier);
     _passwordController = TextEditingController();
   }
 
@@ -65,9 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         authProvider.successMessage ?? AppStrings.loginSuccess,
       );
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
     } else {
       SnackBarHelper.showError(
         context,
@@ -79,9 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
-    final media = MediaQuery.of(context);
-    final screenWidth = media.size.width;
-    final isDesktop = screenWidth >= 600;
+    final horizontalPad = ResponsiveLayout.horizontalPadding(context);
+    final headerH = ResponsiveLayout.headerHeight(context, defaultRatio: 0.28);
+    final verticalSpacing = ResponsiveLayout.verticalSpacing(context, defaultValue: 20.0);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -89,14 +87,16 @@ class _LoginScreenState extends State<LoginScreen> {
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
-            // Top Wavy Coral Header with Topography Lines
-            WavyHeader(height: isDesktop ? 220 : media.size.height * 0.28),
+            // Top Wavy Coral Header with Topography Lines (Adaptive height via MediaQuery)
+            WavyHeader(height: headerH),
 
             Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 440),
+                constraints: const BoxConstraints(
+                  maxWidth: ResponsiveLayout.maxContentWidth,
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                  padding: EdgeInsets.symmetric(horizontal: horizontalPad),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         // "Sign in" Header with accent line
                         const AuthHeaderTitle(title: AppStrings.signInHeader),
-                        const SizedBox(height: 24),
+                        SizedBox(height: verticalSpacing * 1.2),
 
                         // Email or Mobile Field
                         CustomTextField(
@@ -117,10 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validator: Validators.validateIdentifier,
-                          onFieldSubmitted: (_) =>
-                              _passwordFocus.requestFocus(),
+                          onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: verticalSpacing),
 
                         // Password Field with Show/Hide toggle
                         CustomTextField(
@@ -205,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 32),
+                        SizedBox(height: verticalSpacing * 1.5),
 
                         // Sign In Action Button
                         CustomButton(
@@ -215,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ? null
                               : _handleLogin,
                         ),
-                        const SizedBox(height: 36),
+                        SizedBox(height: verticalSpacing * 1.6),
 
                         // Footer: "Don't have an Account ? Sign up"
                         Wrap(
