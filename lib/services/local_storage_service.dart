@@ -63,3 +63,4 @@ class LocalStorageService {
     await prefs.remove(_keyAuthToken);
   }
 }
+

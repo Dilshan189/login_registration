@@ -58,3 +58,4 @@ class AppStrings {
   static const String logoutConfirmMessage = 'Are you sure you want to sign out of your account?';
   static const String cancel = 'Cancel';
 }
+

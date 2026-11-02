@@ -181,3 +181,4 @@ class AuthProvider extends ChangeNotifier {
     _successMessage = null;
   }
 }
+
