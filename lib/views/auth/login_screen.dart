@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
@@ -30,7 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _identifierController = TextEditingController(text: authProvider.savedIdentifier);
+    _identifierController = TextEditingController(
+      text: authProvider.savedIdentifier,
+    );
     _passwordController = TextEditingController();
   }
 
@@ -62,9 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         authProvider.successMessage ?? AppStrings.loginSuccess,
       );
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
     } else {
       SnackBarHelper.showError(
         context,
@@ -73,7 +76,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _fillDemoCredentials({required String identifier, required String password}) {
+  void _fillDemoCredentials({
+    required String identifier,
+    required String password,
+  }) {
     setState(() {
       _identifierController.text = identifier;
       _passwordController.text = password;
@@ -95,9 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             // Top Wavy Coral Header with Topography Lines
-            WavyHeader(
-              height: isDesktop ? 220 : media.size.height * 0.28,
-            ),
+            WavyHeader(height: isDesktop ? 220 : media.size.height * 0.28),
 
             Center(
               child: ConstrainedBox(
@@ -124,7 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validator: Validators.validateIdentifier,
-                          onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
+                          onFieldSubmitted: (_) =>
+                              _passwordFocus.requestFocus(),
                         ),
                         const SizedBox(height: 20),
 
@@ -156,7 +161,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Remember me checkbox
                             InkWell(
                               onTap: () {
-                                authProvider.toggleRememberMe(!authProvider.rememberMe);
+                                authProvider.toggleRememberMe(
+                                  !authProvider.rememberMe,
+                                );
                               },
                               borderRadius: BorderRadius.circular(6),
                               child: Row(
@@ -193,7 +200,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) => const ForgotPasswordScreen(),
+                                    builder: (_) =>
+                                        const ForgotPasswordScreen(),
                                   ),
                                 );
                               },
@@ -214,13 +222,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         CustomButton(
                           text: AppStrings.loginButton,
                           isLoading: authProvider.isLoading,
-                          onPressed: authProvider.isLoading ? null : _handleLogin,
+                          onPressed: authProvider.isLoading
+                              ? null
+                              : _handleLogin,
                         ),
                         const SizedBox(height: 20),
 
                         // Demo Credentials Chip
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(10),
@@ -282,7 +295,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             const Text(
-                              "Don't have an Account ? ",
+                              AppStrings.dontHaveAccount,
                               style: TextStyle(
                                 color: AppColors.textSecondary,
                                 fontSize: 14,
@@ -298,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               },
                               child: const Text(
-                                'Sign up',
+                                AppStrings.signUp,
                                 style: TextStyle(
                                   color: AppColors.primary,
                                   fontSize: 14,

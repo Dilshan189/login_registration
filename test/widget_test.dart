@@ -151,7 +151,7 @@ void main() {
 
       await tester.pumpWidget(createWidgetUnderTest(const LoginScreen()));
 
-      expect(find.text(AppStrings.welcomeBack), findsOneWidget);
+      expect(find.text(AppStrings.signInHeader), findsOneWidget);
       expect(find.text(AppStrings.identifierLabel), findsOneWidget);
       expect(find.text(AppStrings.passwordLabel), findsOneWidget);
       expect(find.text(AppStrings.rememberMe), findsOneWidget);

@@ -146,14 +146,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(height: 8),
 
                         // "Sign up" Header with accent line
-                        const AuthHeaderTitle(title: 'Sign up'),
+                        const AuthHeaderTitle(title: AppStrings.signUpHeader),
                         const SizedBox(height: 22),
 
                         // Full Name
                         CustomTextField(
                           controller: _fullNameController,
-                          label: 'Full Name',
-                          hint: 'John Doe',
+                          label: AppStrings.fullNameLabel,
+                          hint: AppStrings.fullNameHint,
                           prefixIcon: Icons.person_outline_rounded,
                           keyboardType: TextInputType.name,
                           textInputAction: TextInputAction.next,
@@ -166,8 +166,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         CustomTextField(
                           controller: _emailController,
                           focusNode: _emailFocus,
-                          label: 'Email Address',
-                          hint: 'densa@email.com',
+                          label: AppStrings.emailLabel,
+                          hint: AppStrings.emailHint,
                           prefixIcon: Icons.mail_outline_rounded,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
@@ -180,8 +180,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         CustomTextField(
                           controller: _mobileController,
                           focusNode: _mobileFocus,
-                          label: 'Mobile Number',
-                          hint: '9876543210',
+                          label: AppStrings.mobileLabel,
+                          hint: AppStrings.mobileHint,
                           prefixIcon: Icons.phone_android_rounded,
                           keyboardType: TextInputType.phone,
                           textInputAction: TextInputAction.next,
@@ -194,8 +194,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         CustomTextField(
                           controller: _passwordController,
                           focusNode: _passwordFocus,
-                          label: 'Password',
-                          hint: '••••••••••',
+                          label: AppStrings.passwordLabel,
+                          hint: AppStrings.passwordHint,
                           prefixIcon: Icons.lock_outline_rounded,
                           isPassword: true,
                           textInputAction: TextInputAction.next,
@@ -211,8 +211,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         CustomTextField(
                           controller: _confirmPasswordController,
                           focusNode: _confirmPasswordFocus,
-                          label: 'Confirm Password',
-                          hint: '••••••••••',
+                          label: AppStrings.confirmPasswordLabel,
+                          hint: AppStrings.confirmPasswordHint,
                           prefixIcon: Icons.lock_reset_rounded,
                           isPassword: true,
                           textInputAction: TextInputAction.done,
@@ -269,7 +269,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         // Sign Up Action Button
                         CustomButton(
-                          text: 'Sign Up',
+                          text: AppStrings.registerButton,
                           isLoading: authProvider.isLoading,
                           onPressed: authProvider.isLoading ? null : _handleRegister,
                         ),
@@ -281,7 +281,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             const Text(
-                              'Already have an Account ? ',
+                              AppStrings.alreadyHaveAccount,
                               style: TextStyle(
                                 color: AppColors.textSecondary,
                                 fontSize: 14,
@@ -291,7 +291,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             GestureDetector(
                               onTap: () => Navigator.of(context).pop(),
                               child: const Text(
-                                'Sign in',
+                                AppStrings.signIn,
                                 style: TextStyle(
                                   color: AppColors.primary,
                                   fontSize: 14,
