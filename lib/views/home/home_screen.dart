@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
@@ -7,21 +8,19 @@ import '../../core/utils/responsive_layout.dart';
 import '../../core/utils/snackbar_helper.dart';
 import '../auth/login_screen.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/wavy_header.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (dialogCtx) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: const Row(
             children: [
               Icon(Icons.logout_rounded, color: AppColors.error),
@@ -44,10 +43,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () async {
                 Navigator.of(dialogCtx).pop();
-                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                final authProvider = Provider.of<AuthProvider>(
+                  context,
+                  listen: false,
+                );
                 await authProvider.logout();
                 if (context.mounted) {
-                  SnackBarHelper.showSuccess(context, 'Signed out successfully.');
+                  SnackBarHelper.showSuccess(
+                    context,
+                    'Signed out successfully.',
+                  );
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (_) => const LoginScreen()),
                     (route) => false,
@@ -57,6 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.error,
                 foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: const Text(AppStrings.logout),
             ),
@@ -70,184 +78,248 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.currentUser;
+    final horizontalPad = ResponsiveLayout.horizontalPadding(context);
+    final screenH = MediaQuery.sizeOf(context).height;
+    final headerH = (screenH * 0.22).clamp(160.0, 200.0);
 
     final initials = (user?.fullName.isNotEmpty ?? false)
         ? user!.fullName
-            .trim()
-            .split(' ')
-            .map((e) => e.isNotEmpty ? e[0] : '')
-            .take(2)
-            .join()
-            .toUpperCase()
+              .trim()
+              .split(' ')
+              .map((e) => e.isNotEmpty ? e[0] : '')
+              .take(2)
+              .join()
+              .toUpperCase()
         : 'U';
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text(
-          'Workspace Dashboard',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Sign Out',
-            icon: const Icon(Icons.logout_rounded, color: AppColors.error),
-            onPressed: () => _showLogoutDialog(context),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(
-              horizontal: ResponsiveLayout.horizontalPadding(context),
-              vertical: 24.0,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 580),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Profile Header Card
-                  Card(
-                    elevation: 1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: const BorderSide(color: AppColors.border),
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            // Top Wavy Coral Header matching the design theme
+            WavyHeader(
+              height: headerH,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 12.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Text(
+                          'Workspace',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Welcome to your personal account',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              gradient: AppColors.primaryGradient,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primary.withValues(alpha: 0.3),
-                                  blurRadius: 16,
-                                  offset: const Offset(0, 6),
-                                ),
-                              ],
+                  ),
+                ),
+              ),
+            ),
+
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: ResponsiveLayout.maxContentWidth,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 12),
+
+                      // Profile Card with Avatar & Verification Badge
+                      Container(
+                        padding: const EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color(0xFFF1F5F9),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.04),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
                             ),
-                            child: Center(
-                              child: Text(
-                                initials,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            // Avatar with gradient
+                            Container(
+                              width: 74,
+                              height: 74,
+                              decoration: BoxDecoration(
+                                gradient: AppColors.primaryGradient,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.primary.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    blurRadius: 14,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  initials,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            user?.fullName ?? 'Authenticated User',
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
+                            const SizedBox(height: 14),
+
+                            Text(
+                              user?.fullName ?? 'Authenticated User',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.textPrimary,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.successLight,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.verified_rounded,
-                                  size: 14,
-                                  color: AppColors.success,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Active Session',
-                                  style: TextStyle(
+                            const SizedBox(height: 6),
+
+                            // Active Session Badge
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.successLight,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.verified_rounded,
+                                    size: 14,
                                     color: AppColors.success,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'Active Session',
+                                    style: TextStyle(
+                                      color: AppColors.success,
+                                      fontSize: 11.5,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                      const SizedBox(height: 18),
 
-                  // User Details Card
-                  Card(
-                    elevation: 1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: const BorderSide(color: AppColors.border),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Account Details',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
+                      // User Details List Card
+                      Container(
+                        padding: const EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: const Color(0xFFF1F5F9),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.03),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          _buildDetailRow(
-                            icon: Icons.badge_outlined,
-                            title: 'User ID',
-                            value: user?.id ?? 'N/A',
-                          ),
-                          const Divider(color: AppColors.border, height: 24),
-                          _buildDetailRow(
-                            icon: Icons.alternate_email_rounded,
-                            title: 'Email Address',
-                            value: user?.email ?? 'N/A',
-                          ),
-                          const Divider(color: AppColors.border, height: 24),
-                          _buildDetailRow(
-                            icon: Icons.phone_android_rounded,
-                            title: 'Mobile Number',
-                            value: user?.mobileNumber ?? 'N/A',
-                          ),
-                          const Divider(color: AppColors.border, height: 24),
-                          _buildDetailRow(
-                            icon: Icons.bookmark_added_outlined,
-                            title: 'Remember Me Saved',
-                            value: authProvider.rememberMe ? 'Enabled' : 'Disabled',
-                          ),
-                        ],
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Account Details',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            _buildDetailRow(
+                              icon: Icons.person_outline_rounded,
+                              title: 'Full Name',
+                              value: user?.fullName ?? 'N/A',
+                            ),
+                            const Divider(color: Color(0xFFF1F5F9), height: 20),
+                            _buildDetailRow(
+                              icon: Icons.mail_outline_rounded,
+                              title: 'Email Address',
+                              value: user?.email ?? 'N/A',
+                            ),
+                            const Divider(color: Color(0xFFF1F5F9), height: 20),
+                            _buildDetailRow(
+                              icon: Icons.phone_android_rounded,
+                              title: 'Mobile Number',
+                              value: user?.mobileNumber ?? 'N/A',
+                            ),
+                            const Divider(color: Color(0xFFF1F5F9), height: 20),
+                            _buildDetailRow(
+                              icon: Icons.bookmark_added_outlined,
+                              title: 'Remember Me',
+                              value: authProvider.rememberMe
+                                  ? 'Enabled'
+                                  : 'Disabled',
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
+                      const SizedBox(height: 28),
 
-                  // Logout Button
-                  CustomButton(
-                    text: AppStrings.logout,
-                    isOutlined: true,
-                    icon: Icons.logout_rounded,
-                    onPressed: () => _showLogoutDialog(context),
+                      // ONLY ONE Dedicated Logout Button (Prominent & Clean)
+                      CustomButton(
+                        text: AppStrings.logout,
+                        isOutlined: true,
+                        height: 50,
+                        icon: Icons.logout_rounded,
+                        onPressed: () => _showLogoutDialog(context),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -263,12 +335,12 @@ class _HomeScreenState extends State<HomeScreen> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.inputFill,
+            color: const Color(0xFFF8FAFC),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, size: 20, color: AppColors.primary),
+          child: Icon(icon, size: 18, color: AppColors.primary),
         ),
-        const SizedBox(width: 14),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,16 +348,16 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 11.5,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 1),
               Text(
                 value,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 13.5,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
                 ),
