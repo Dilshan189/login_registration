@@ -26,19 +26,23 @@ class CustomButton extends StatelessWidget {
     final isDisabled = onPressed == null || isLoading;
 
     if (isOutlined) {
-      return SizedBox(
+      return Container(
         width: width ?? double.infinity,
         height: height,
-        child: OutlinedButton(
-          onPressed: isDisabled ? null : onPressed,
-          style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: AppColors.primary, width: 1.5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.primary, width: 1.5),
+          color: Colors.white,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: isDisabled ? null : onPressed,
+            child: Center(
+              child: _buildContent(textColor: AppColors.primary),
             ),
-            backgroundColor: Colors.white,
           ),
-          child: _buildContent(textColor: AppColors.primary),
         ),
       );
     }
