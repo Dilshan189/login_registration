@@ -9,6 +9,7 @@ import 'package:login_resistration/core/utils/validators.dart';
 import 'package:login_resistration/services/auth_service.dart';
 import 'package:login_resistration/views/auth/login_screen.dart';
 import 'package:login_resistration/views/auth/register_screen.dart';
+import 'package:login_resistration/views/widgets/auth_header_title.dart';
 import 'package:login_resistration/views/widgets/custom_button.dart';
 
 void main() {
@@ -151,12 +152,12 @@ void main() {
 
       await tester.pumpWidget(createWidgetUnderTest(const LoginScreen()));
 
-      expect(find.text(AppStrings.signInHeader), findsOneWidget);
+      expect(find.widgetWithText(AuthHeaderTitle, AppStrings.signInHeader), findsOneWidget);
       expect(find.text(AppStrings.identifierLabel), findsOneWidget);
       expect(find.text(AppStrings.passwordLabel), findsOneWidget);
       expect(find.text(AppStrings.rememberMe), findsOneWidget);
       expect(find.text(AppStrings.forgotPassword), findsOneWidget);
-      expect(find.text(AppStrings.loginButton), findsOneWidget);
+      expect(find.widgetWithText(CustomButton, AppStrings.loginButton), findsOneWidget);
       expect(find.text(AppStrings.signUp), findsOneWidget);
     });
 
@@ -168,7 +169,7 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest(const LoginScreen()));
 
       // Tap Login button
-      await tester.tap(find.text(AppStrings.loginButton));
+      await tester.tap(find.widgetWithText(CustomButton, AppStrings.loginButton));
       await tester.pumpAndSettle();
 
       // Should display required field error
@@ -215,17 +216,17 @@ void main() {
 
       await tester.pumpWidget(createWidgetUnderTest(const LoginScreen()));
       await tester.pumpAndSettle();
-      expect(find.text(AppStrings.signInHeader), findsOneWidget);
+      expect(find.widgetWithText(AuthHeaderTitle, AppStrings.signInHeader), findsOneWidget);
 
       await tester.pumpWidget(createWidgetUnderTest(const RegisterScreen()));
       await tester.pumpAndSettle();
-      expect(find.text(AppStrings.signUpHeader), findsOneWidget);
+      expect(find.widgetWithText(AuthHeaderTitle, AppStrings.signUpHeader), findsOneWidget);
 
       // 2. Tablet landscape screen (1280x800)
       tester.view.physicalSize = const Size(1280, 800);
       await tester.pumpWidget(createWidgetUnderTest(const LoginScreen()));
       await tester.pumpAndSettle();
-      expect(find.text(AppStrings.signInHeader), findsOneWidget);
+      expect(find.widgetWithText(AuthHeaderTitle, AppStrings.signInHeader), findsOneWidget);
 
       addTearDown(tester.view.resetPhysicalSize);
     });

@@ -2,7 +2,7 @@ class AppStrings {
   // App General
   static const String appName = 'AuthFlow';
   static const String signInHeader = 'Login';
-  static const String signUpHeader = 'Registration';
+  static const String signUpHeader = 'Register';
   static const String welcomeBack = 'Welcome Back!';
   static const String loginSubtitle =
       'Sign in to access your account & manage your workspace';
@@ -28,7 +28,7 @@ class AppStrings {
   static const String confirmPasswordHint = '••••••••••';
 
   // Actions
-  static const String loginButton = 'LogIn';
+  static const String loginButton = 'Login';
   static const String registerButton = 'Register';
   static const String resetPasswordButton = 'Send Reset Link';
   static const String rememberMe = 'Remember Me';
@@ -38,9 +38,9 @@ class AppStrings {
       'You must accept the terms and conditions';
   static const String alreadyHaveAccount = 'Already have an Account ? ';
   static const String dontHaveAccount = "Don't have an Account ? ";
-  static const String signIn = 'Sign in';
-  static const String signUp = 'Sign up';
-  static const String backToLogin = 'Back to Sign In';
+  static const String signIn = 'Login';
+  static const String signUp = 'Register';
+  static const String backToLogin = 'Back to Login';
   static const String logout = 'Log Out';
   static const String demoAccount = 'Demo Account Quick Fill';
 

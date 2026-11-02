@@ -150,7 +150,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 child: GestureDetector(
                                   onTap: () => Navigator.of(context).pop(),
                                   child: const Text(
-                                    'Back to Sign in',
+                                    AppStrings.backToLogin,
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: 14,
@@ -213,7 +213,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         const SizedBox(height: 32),
         CustomButton(
-          text: 'Back to Sign in',
+          text: AppStrings.backToLogin,
           onPressed: () => Navigator.of(context).pop(),
         ),
         const SizedBox(height: 28),
