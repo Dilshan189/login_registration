@@ -6,10 +6,11 @@ import '../../core/constants/app_strings.dart';
 import '../../core/utils/snackbar_helper.dart';
 import '../../core/utils/validators.dart';
 import '../home/home_screen.dart';
-import '../widgets/app_logo.dart';
+import '../widgets/auth_header_title.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/password_strength_meter.dart';
+import '../widgets/wavy_header.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -102,99 +103,99 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isCompact = screenWidth < 480;
+    final media = MediaQuery.of(context);
+    final isDesktop = media.size.width >= 600;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text('Registration'),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(
-              horizontal: isCompact ? 16.0 : 24.0,
-              vertical: 16.0,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 460),
-              child: Card(
-                elevation: isCompact ? 0 : 2,
-                color: isCompact ? Colors.transparent : Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: isCompact
-                      ? BorderSide.none
-                      : const BorderSide(color: AppColors.border),
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            // Top Wavy Header with back button
+            WavyHeader(
+              height: isDesktop ? 180 : media.size.height * 0.22,
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12.0, top: 8.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
                 ),
+              ),
+            ),
+
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 440),
                 child: Padding(
-                  padding: EdgeInsets.all(isCompact ? 4.0 : 24.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 28.0),
                   child: Form(
                     key: _formKey,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const AppLogo(
-                          title: AppStrings.createAccount,
-                          subtitle: AppStrings.registerSubtitle,
-                          iconSize: 56,
-                        ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 8),
+
+                        // "Sign up" Header with accent line
+                        const AuthHeaderTitle(title: 'Sign up'),
+                        const SizedBox(height: 22),
 
                         // Full Name
                         CustomTextField(
                           controller: _fullNameController,
-                          label: AppStrings.fullNameLabel,
-                          hint: AppStrings.fullNameHint,
-                          prefixIcon: Icons.badge_outlined,
+                          label: 'Full Name',
+                          hint: 'John Doe',
+                          prefixIcon: Icons.person_outline_rounded,
                           keyboardType: TextInputType.name,
                           textInputAction: TextInputAction.next,
                           validator: Validators.validateFullName,
                           onFieldSubmitted: (_) => _emailFocus.requestFocus(),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 18),
 
                         // Email Address
                         CustomTextField(
                           controller: _emailController,
                           focusNode: _emailFocus,
-                          label: AppStrings.emailLabel,
-                          hint: AppStrings.emailHint,
-                          prefixIcon: Icons.alternate_email_rounded,
+                          label: 'Email Address',
+                          hint: 'densa@email.com',
+                          prefixIcon: Icons.mail_outline_rounded,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validator: Validators.validateEmail,
                           onFieldSubmitted: (_) => _mobileFocus.requestFocus(),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 18),
 
                         // Mobile Number
                         CustomTextField(
                           controller: _mobileController,
                           focusNode: _mobileFocus,
-                          label: AppStrings.mobileLabel,
-                          hint: AppStrings.mobileHint,
+                          label: 'Mobile Number',
+                          hint: '9876543210',
                           prefixIcon: Icons.phone_android_rounded,
                           keyboardType: TextInputType.phone,
                           textInputAction: TextInputAction.next,
                           validator: Validators.validateMobile,
                           onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 18),
 
                         // Password
                         CustomTextField(
                           controller: _passwordController,
                           focusNode: _passwordFocus,
-                          label: AppStrings.passwordLabel,
-                          hint: AppStrings.passwordHint,
+                          label: 'Password',
+                          hint: '••••••••••',
                           prefixIcon: Icons.lock_outline_rounded,
                           isPassword: true,
                           textInputAction: TextInputAction.next,
@@ -202,16 +203,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onFieldSubmitted: (_) => _confirmPasswordFocus.requestFocus(),
                         ),
 
-                        // Dynamic Password Strength Meter
+                        // Real-time password strength meter
                         PasswordStrengthMeter(password: _currentPasswordText),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 18),
 
                         // Confirm Password
                         CustomTextField(
                           controller: _confirmPasswordController,
                           focusNode: _confirmPasswordFocus,
-                          label: AppStrings.confirmPasswordLabel,
-                          hint: AppStrings.confirmPasswordHint,
+                          label: 'Confirm Password',
+                          hint: '••••••••••',
                           prefixIcon: Icons.lock_reset_rounded,
                           isPassword: true,
                           textInputAction: TextInputAction.done,
@@ -235,8 +236,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 24,
-                                height: 24,
+                                width: 22,
+                                height: 22,
                                 child: Checkbox(
                                   value: _agreeToTerms,
                                   onChanged: (val) {
@@ -244,6 +245,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       _agreeToTerms = val ?? false;
                                     });
                                   },
+                                  activeColor: AppColors.primary,
+                                  side: const BorderSide(
+                                    color: AppColors.primary,
+                                    width: 1.5,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -251,7 +257,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 child: Text(
                                   AppStrings.termsNotice,
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 12,
                                     color: AppColors.textSecondary,
                                   ),
                                 ),
@@ -259,39 +265,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 28),
 
-                        // Registration Button with loading indicator
+                        // Sign Up Action Button
                         CustomButton(
-                          text: AppStrings.registerButton,
+                          text: 'Sign Up',
                           isLoading: authProvider.isLoading,
                           onPressed: authProvider.isLoading ? null : _handleRegister,
-                          icon: Icons.person_add_alt_1_rounded,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 24),
 
-                        // Link back to Login
+                        // Footer: "Already have an Account ? Sign in"
                         Wrap(
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             const Text(
-                              AppStrings.alreadyHaveAccount,
+                              'Already have an Account ? ',
                               style: TextStyle(
                                 color: AppColors.textSecondary,
                                 fontSize: 14,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pop(),
                               child: const Text(
-                                AppStrings.signIn,
+                                'Sign in',
                                 style: TextStyle(
                                   color: AppColors.primary,
                                   fontSize: 14,
@@ -301,13 +301,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 28),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

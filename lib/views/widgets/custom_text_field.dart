@@ -53,7 +53,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             color: AppColors.textPrimary,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         TextFormField(
           controller: widget.controller,
           focusNode: widget.focusNode,
@@ -71,15 +71,52 @@ class _CustomTextFieldState extends State<CustomTextField> {
             fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
+            isDense: true,
             hintText: widget.hint,
-            prefixIcon: Icon(widget.prefixIcon, size: 20),
+            hintStyle: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+            filled: false,
+            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 48,
+              minHeight: 24,
+            ),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.only(right: 6.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    widget.prefixIcon,
+                    size: 20,
+                    color: AppColors.textMuted,
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    height: 16,
+                    width: 1.2,
+                    color: const Color(0xFFCBD5E1),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+              ),
+            ),
+            suffixIconConstraints: const BoxConstraints(
+              minWidth: 32,
+              minHeight: 24,
+            ),
             suffixIcon: widget.isPassword
                 ? IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
                     icon: Icon(
                       _obscureText
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
-                      color: AppColors.textSecondary,
+                      color: AppColors.textMuted,
                       size: 20,
                     ),
                     onPressed: () {
@@ -90,10 +127,24 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     tooltip: _obscureText ? 'Show password' : 'Hide password',
                   )
                 : widget.suffix,
+            border: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE2E8F0), width: 1.2),
+            ),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE2E8F0), width: 1.2),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.primary, width: 2.0),
+            ),
+            errorBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.error, width: 1.2),
+            ),
+            focusedErrorBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: AppColors.error, width: 2.0),
+            ),
           ),
         ),
       ],
     );
   }
 }
-

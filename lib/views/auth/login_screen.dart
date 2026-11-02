@@ -6,10 +6,10 @@ import '../../core/constants/app_strings.dart';
 import '../../core/utils/snackbar_helper.dart';
 import '../../core/utils/validators.dart';
 import '../home/home_screen.dart';
-import '../widgets/app_logo.dart';
+import '../widgets/auth_header_title.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
-import '../widgets/social_auth_divider.dart';
+import '../widgets/wavy_header.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 
@@ -43,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
-    // Dismiss soft keyboard
     FocusScope.of(context).unfocus();
 
     if (!_formKey.currentState!.validate()) {
@@ -85,70 +84,165 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isCompact = screenWidth < 480;
+    final media = MediaQuery.of(context);
+    final screenWidth = media.size.width;
+    final isDesktop = screenWidth >= 600;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(
-              horizontal: isCompact ? 16.0 : 24.0,
-              vertical: 20.0,
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            // Top Wavy Coral Header with Topography Lines
+            WavyHeader(
+              height: isDesktop ? 220 : media.size.height * 0.28,
             ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 440),
-              child: Card(
-                elevation: isCompact ? 0 : 2,
-                color: isCompact ? Colors.transparent : Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: isCompact
-                      ? BorderSide.none
-                      : const BorderSide(color: AppColors.border),
-                ),
+
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 440),
                 child: Padding(
-                  padding: EdgeInsets.all(isCompact ? 4.0 : 24.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 28.0),
                   child: Form(
                     key: _formKey,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const SizedBox(height: 8),
-                        const AppLogo(
-                          title: AppStrings.welcomeBack,
-                          subtitle: AppStrings.loginSubtitle,
-                        ),
+
+                        // "Sign in" Header with accent line
+                        const AuthHeaderTitle(title: AppStrings.signInHeader),
                         const SizedBox(height: 24),
 
-                        // Demo Credentials helper chip
+                        // Email or Mobile Field
+                        CustomTextField(
+                          controller: _identifierController,
+                          label: AppStrings.identifierLabel,
+                          hint: AppStrings.identifierHint,
+                          prefixIcon: Icons.mail_outline_rounded,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          validator: Validators.validateIdentifier,
+                          onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Password Field with Show/Hide toggle
+                        CustomTextField(
+                          controller: _passwordController,
+                          focusNode: _passwordFocus,
+                          label: AppStrings.passwordLabel,
+                          hint: AppStrings.passwordHint,
+                          prefixIcon: Icons.lock_outline_rounded,
+                          isPassword: true,
+                          textInputAction: TextInputAction.done,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return AppStrings.requiredField;
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (_) => _handleLogin(),
+                        ),
+                        const SizedBox(height: 14),
+
+                        // Remember Me and Forgot Password Row
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          runSpacing: 8,
+                          children: [
+                            // Remember me checkbox
+                            InkWell(
+                              onTap: () {
+                                authProvider.toggleRememberMe(!authProvider.rememberMe);
+                              },
+                              borderRadius: BorderRadius.circular(6),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: Checkbox(
+                                      value: authProvider.rememberMe,
+                                      onChanged: authProvider.toggleRememberMe,
+                                      activeColor: AppColors.primary,
+                                      side: const BorderSide(
+                                        color: AppColors.primary,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    AppStrings.rememberMe,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: AppColors.textPrimary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Forgot Password link
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const ForgotPasswordScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                AppStrings.forgotPassword,
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
+
+                        // Sign In Action Button
+                        CustomButton(
+                          text: AppStrings.loginButton,
+                          isLoading: authProvider.isLoading,
+                          onPressed: authProvider.isLoading ? null : _handleLogin,
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Demo Credentials Chip
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           decoration: BoxDecoration(
-                            color: AppColors.primaryLight.withValues(alpha: 0.1),
+                            color: AppColors.primary.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: AppColors.primaryLight.withValues(alpha: 0.3),
+                              color: AppColors.primary.withValues(alpha: 0.25),
                             ),
                           ),
                           child: Row(
                             children: [
                               const Icon(
                                 Icons.auto_awesome_rounded,
-                                size: 18,
+                                size: 16,
                                 color: AppColors.primary,
                               ),
                               const SizedBox(width: 8),
                               const Expanded(
                                 child: Text(
-                                  'Demo Account',
+                                  'Demo: user@example.com',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: AppColors.primary,
+                                    color: AppColors.primaryDark,
                                   ),
                                 ),
                               ),
@@ -180,157 +274,31 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 36),
 
-                        // Email or Mobile Input
-                        CustomTextField(
-                          controller: _identifierController,
-                          label: AppStrings.identifierLabel,
-                          hint: AppStrings.identifierHint,
-                          prefixIcon: Icons.account_circle_outlined,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          validator: Validators.validateIdentifier,
-                          onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
-                        ),
-                        const SizedBox(height: 18),
-
-                        // Password Input with show/hide toggle
-                        CustomTextField(
-                          controller: _passwordController,
-                          label: AppStrings.passwordLabel,
-                          hint: AppStrings.passwordHint,
-                          prefixIcon: Icons.lock_outline_rounded,
-                          isPassword: true,
-                          focusNode: _passwordFocus,
-                          textInputAction: TextInputAction.done,
-                          validator: (val) {
-                            if (val == null || val.isEmpty) {
-                              return AppStrings.requiredField;
-                            }
-                            return null;
-                          },
-                          onFieldSubmitted: (_) => _handleLogin(),
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Remember Me and Forgot Password Row
-                        Wrap(
-                          alignment: WrapAlignment.spaceBetween,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          runSpacing: 8,
-                          children: [
-                            // Remember me checkbox
-                            InkWell(
-                              onTap: () {
-                                authProvider.toggleRememberMe(!authProvider.rememberMe);
-                              },
-                              borderRadius: BorderRadius.circular(6),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: Checkbox(
-                                      value: authProvider.rememberMe,
-                                      onChanged: authProvider.toggleRememberMe,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    AppStrings.rememberMe,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: AppColors.textSecondary,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // Forgot password button
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => const ForgotPasswordScreen(),
-                                  ),
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: const Text(
-                                AppStrings.forgotPassword,
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Login Button with Loading Indicator
-                        CustomButton(
-                          text: AppStrings.loginButton,
-                          isLoading: authProvider.isLoading,
-                          onPressed: authProvider.isLoading ? null : _handleLogin,
-                          icon: Icons.login_rounded,
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Social Authentication Divider
-                        SocialAuthDivider(
-                          onGoogleTap: () => SnackBarHelper.showInfo(
-                            context,
-                            'Google Sign-In integration ready.',
-                          ),
-                          onAppleTap: () => SnackBarHelper.showInfo(
-                            context,
-                            'Apple Sign-In integration ready.',
-                          ),
-                          onGithubTap: () => SnackBarHelper.showInfo(
-                            context,
-                            'GitHub Sign-In integration ready.',
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Navigation to Registration
+                        // Footer: "Don't have an Account ? Sign up"
                         Wrap(
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             const Text(
-                              AppStrings.dontHaveAccount,
+                              "Don't have an Account ? ",
                               style: TextStyle(
                                 color: AppColors.textSecondary,
                                 fontSize: 14,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            TextButton(
-                              onPressed: () {
+                            GestureDetector(
+                              onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (_) => const RegisterScreen(),
                                   ),
                                 );
                               },
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
-                                minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
                               child: const Text(
-                                AppStrings.signUp,
+                                'Sign up',
                                 style: TextStyle(
                                   color: AppColors.primary,
                                   fontSize: 14,
@@ -340,13 +308,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 28),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

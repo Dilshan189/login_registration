@@ -32,13 +32,13 @@ class CustomButton extends StatelessWidget {
         child: OutlinedButton(
           onPressed: isDisabled ? null : onPressed,
           style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: AppColors.border, width: 1.5),
+            side: const BorderSide(color: AppColors.primary, width: 1.5),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
             ),
             backgroundColor: Colors.white,
           ),
-          child: _buildContent(textColor: AppColors.textPrimary),
+          child: _buildContent(textColor: AppColors.primary),
         ),
       );
     }
@@ -47,25 +47,24 @@ class CustomButton extends StatelessWidget {
       width: width ?? double.infinity,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        gradient: isDisabled
-            ? null
-            : AppColors.primaryGradient,
-        color: isDisabled ? AppColors.textMuted.withValues(alpha: 0.4) : null,
+        borderRadius: BorderRadius.circular(14),
+        color: isDisabled
+            ? AppColors.primary.withValues(alpha: 0.5)
+            : AppColors.primary,
         boxShadow: isDisabled
             ? null
             : [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.28),
+                  color: AppColors.primary.withValues(alpha: 0.35),
                   offset: const Offset(0, 4),
-                  blurRadius: 12,
+                  blurRadius: 10,
                 ),
               ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           onTap: isDisabled ? null : onPressed,
           child: Center(
             child: _buildContent(textColor: Colors.white),
@@ -100,8 +99,8 @@ class CustomButton extends StatelessWidget {
           style: TextStyle(
             color: textColor,
             fontSize: 16,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.3,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.2,
           ),
         ),
       ],
