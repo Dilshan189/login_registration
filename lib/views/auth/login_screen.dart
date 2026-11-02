@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
@@ -31,7 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _identifierController = TextEditingController(text: authProvider.savedIdentifier);
+    _identifierController = TextEditingController(
+      text: authProvider.savedIdentifier,
+    );
     _passwordController = TextEditingController();
   }
 
@@ -63,9 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         authProvider.successMessage ?? AppStrings.loginSuccess,
       );
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
     } else {
       SnackBarHelper.showError(
         context,
@@ -79,7 +82,10 @@ class _LoginScreenState extends State<LoginScreen> {
     final authProvider = context.watch<AuthProvider>();
     final horizontalPad = ResponsiveLayout.horizontalPadding(context);
     final headerH = ResponsiveLayout.headerHeight(context, defaultRatio: 0.28);
-    final verticalSpacing = ResponsiveLayout.verticalSpacing(context, defaultValue: 20.0);
+    final verticalSpacing = ResponsiveLayout.verticalSpacing(
+      context,
+      defaultValue: 20.0,
+    );
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -117,7 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validator: Validators.validateIdentifier,
-                          onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
+                          onFieldSubmitted: (_) =>
+                              _passwordFocus.requestFocus(),
                         ),
                         SizedBox(height: verticalSpacing),
 
