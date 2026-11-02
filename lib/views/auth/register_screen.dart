@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
@@ -105,8 +106,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final horizontalPad = ResponsiveLayout.horizontalPadding(context);
-    final headerH = (MediaQuery.sizeOf(context).height * 0.14).clamp(90.0, 120.0);
-    final fieldGap = (MediaQuery.sizeOf(context).height * 0.012).clamp(6.0, 10.0);
+    final headerH = (MediaQuery.sizeOf(context).height * 0.14).clamp(
+      90.0,
+      120.0,
+    );
+    final fieldGap = (MediaQuery.sizeOf(context).height * 0.012).clamp(
+      6.0,
+      10.0,
+    );
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -195,7 +202,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           keyboardType: TextInputType.phone,
                           textInputAction: TextInputAction.next,
                           validator: Validators.validateMobile,
-                          onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
+                          onFieldSubmitted: (_) =>
+                              _passwordFocus.requestFocus(),
                         ),
                         SizedBox(height: fieldGap),
 
@@ -209,7 +217,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           isPassword: true,
                           textInputAction: TextInputAction.next,
                           validator: Validators.validatePassword,
-                          onFieldSubmitted: (_) => _confirmPasswordFocus.requestFocus(),
+                          onFieldSubmitted: (_) =>
+                              _confirmPasswordFocus.requestFocus(),
                         ),
 
                         // Compact real-time password strength meter
@@ -225,10 +234,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           prefixIcon: Icons.lock_reset_rounded,
                           isPassword: true,
                           textInputAction: TextInputAction.done,
-                          validator: (value) => Validators.validateConfirmPassword(
-                            value,
-                            _passwordController.text,
-                          ),
+                          validator: (value) =>
+                              Validators.validateConfirmPassword(
+                                value,
+                                _passwordController.text,
+                              ),
                           onFieldSubmitted: (_) => _handleRegister(),
                         ),
                         SizedBox(height: fieldGap * 0.8),
@@ -281,7 +291,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           text: AppStrings.registerButton,
                           height: 48,
                           isLoading: authProvider.isLoading,
-                          onPressed: authProvider.isLoading ? null : _handleRegister,
+                          onPressed: authProvider.isLoading
+                              ? null
+                              : _handleRegister,
                         ),
                         SizedBox(height: fieldGap * 1.4),
 
