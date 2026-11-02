@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
@@ -106,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final authProvider = context.watch<AuthProvider>();
     final horizontalPad = ResponsiveLayout.horizontalPadding(context);
     final screenH = MediaQuery.sizeOf(context).height;
-    
+
     // Balanced, elegant header height matching the original design
     final headerH = (screenH * 0.23).clamp(170.0, 220.0);
     final fieldGap = (screenH * 0.015).clamp(8.0, 14.0);
@@ -117,218 +118,224 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          children: [
-            // Prominent, beautiful Wavy Header with back chevron '<' button
-            WavyHeader(
-              height: headerH,
-              child: SafeArea(
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0, top: 8.0),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.chevron_left_rounded,
-                        color: Colors.white,
-                        size: 34,
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              // Prominent, beautiful Wavy Header with back chevron '<' button
+              WavyHeader(
+                height: headerH,
+                child: SafeArea(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12.0, top: 8.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.chevron_left_rounded,
+                          color: Colors.white,
+                          size: 34,
+                        ),
+                        tooltip: 'Back',
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
-                      tooltip: 'Back',
-                      onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: ResponsiveLayout.maxContentWidth,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: horizontalPad),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: 4),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: ResponsiveLayout.maxContentWidth,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 4),
 
-                        // "Register" Header with accent line
-                        const AuthHeaderTitle(
-                          title: AppStrings.signUpHeader,
-                          fontSize: 28,
-                          lineWidth: 40,
-                        ),
-                        SizedBox(height: fieldGap * 1.2),
-
-                        // Full Name
-                        CustomTextField(
-                          controller: _fullNameController,
-                          label: AppStrings.fullNameLabel,
-                          hint: AppStrings.fullNameHint,
-                          prefixIcon: Icons.person_outline_rounded,
-                          keyboardType: TextInputType.name,
-                          textInputAction: TextInputAction.next,
-                          validator: Validators.validateFullName,
-                          onFieldSubmitted: (_) => _emailFocus.requestFocus(),
-                        ),
-                        SizedBox(height: fieldGap),
-
-                        // Email Address
-                        CustomTextField(
-                          controller: _emailController,
-                          focusNode: _emailFocus,
-                          label: AppStrings.emailLabel,
-                          hint: AppStrings.emailHint,
-                          prefixIcon: Icons.mail_outline_rounded,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          validator: Validators.validateEmail,
-                          onFieldSubmitted: (_) => _mobileFocus.requestFocus(),
-                        ),
-                        SizedBox(height: fieldGap),
-
-                        // Mobile Number
-                        CustomTextField(
-                          controller: _mobileController,
-                          focusNode: _mobileFocus,
-                          label: AppStrings.mobileLabel,
-                          hint: AppStrings.mobileHint,
-                          prefixIcon: Icons.phone_android_rounded,
-                          keyboardType: TextInputType.phone,
-                          textInputAction: TextInputAction.next,
-                          validator: Validators.validateMobile,
-                          onFieldSubmitted: (_) => _passwordFocus.requestFocus(),
-                        ),
-                        SizedBox(height: fieldGap),
-
-                        // Password
-                        CustomTextField(
-                          controller: _passwordController,
-                          focusNode: _passwordFocus,
-                          label: AppStrings.passwordLabel,
-                          hint: AppStrings.passwordHint,
-                          prefixIcon: Icons.lock_outline_rounded,
-                          isPassword: true,
-                          textInputAction: TextInputAction.next,
-                          validator: Validators.validatePassword,
-                          onFieldSubmitted: (_) => _confirmPasswordFocus.requestFocus(),
-                        ),
-
-                        // Compact real-time password strength meter
-                        PasswordStrengthMeter(password: _currentPasswordText),
-                        SizedBox(height: fieldGap),
-
-                        // Confirm Password
-                        CustomTextField(
-                          controller: _confirmPasswordController,
-                          focusNode: _confirmPasswordFocus,
-                          label: AppStrings.confirmPasswordLabel,
-                          hint: AppStrings.confirmPasswordHint,
-                          prefixIcon: Icons.lock_reset_rounded,
-                          isPassword: true,
-                          textInputAction: TextInputAction.done,
-                          validator: (value) => Validators.validateConfirmPassword(
-                            value,
-                            _passwordController.text,
+                          // "Register" Header with accent line
+                          const AuthHeaderTitle(
+                            title: AppStrings.signUpHeader,
+                            fontSize: 28,
+                            lineWidth: 40,
                           ),
-                          onFieldSubmitted: (_) => _handleRegister(),
-                        ),
-                        SizedBox(height: fieldGap * 0.9),
+                          SizedBox(height: fieldGap * 1.2),
 
-                        // Terms and Conditions checkbox
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              _agreeToTerms = !_agreeToTerms;
-                            });
-                          },
-                          borderRadius: BorderRadius.circular(6),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 22,
-                                height: 22,
-                                child: Checkbox(
-                                  value: _agreeToTerms,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _agreeToTerms = val ?? false;
-                                    });
-                                  },
-                                  activeColor: AppColors.primary,
-                                  side: const BorderSide(
-                                    color: AppColors.primary,
-                                    width: 1.5,
+                          // Full Name
+                          CustomTextField(
+                            controller: _fullNameController,
+                            label: AppStrings.fullNameLabel,
+                            hint: AppStrings.fullNameHint,
+                            prefixIcon: Icons.person_outline_rounded,
+                            keyboardType: TextInputType.name,
+                            textInputAction: TextInputAction.next,
+                            validator: Validators.validateFullName,
+                            onFieldSubmitted: (_) => _emailFocus.requestFocus(),
+                          ),
+                          SizedBox(height: fieldGap),
+
+                          // Email Address
+                          CustomTextField(
+                            controller: _emailController,
+                            focusNode: _emailFocus,
+                            label: AppStrings.emailLabel,
+                            hint: AppStrings.emailHint,
+                            prefixIcon: Icons.mail_outline_rounded,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            validator: Validators.validateEmail,
+                            onFieldSubmitted: (_) =>
+                                _mobileFocus.requestFocus(),
+                          ),
+                          SizedBox(height: fieldGap),
+
+                          // Mobile Number
+                          CustomTextField(
+                            controller: _mobileController,
+                            focusNode: _mobileFocus,
+                            label: AppStrings.mobileLabel,
+                            hint: AppStrings.mobileHint,
+                            prefixIcon: Icons.phone_android_rounded,
+                            keyboardType: TextInputType.phone,
+                            textInputAction: TextInputAction.next,
+                            validator: Validators.validateMobile,
+                            onFieldSubmitted: (_) =>
+                                _passwordFocus.requestFocus(),
+                          ),
+                          SizedBox(height: fieldGap),
+
+                          // Password
+                          CustomTextField(
+                            controller: _passwordController,
+                            focusNode: _passwordFocus,
+                            label: AppStrings.passwordLabel,
+                            hint: AppStrings.passwordHint,
+                            prefixIcon: Icons.lock_outline_rounded,
+                            isPassword: true,
+                            textInputAction: TextInputAction.next,
+                            validator: Validators.validatePassword,
+                            onFieldSubmitted: (_) =>
+                                _confirmPasswordFocus.requestFocus(),
+                          ),
+
+                          // Compact real-time password strength meter
+                          PasswordStrengthMeter(password: _currentPasswordText),
+                          SizedBox(height: fieldGap),
+
+                          // Confirm Password
+                          CustomTextField(
+                            controller: _confirmPasswordController,
+                            focusNode: _confirmPasswordFocus,
+                            label: AppStrings.confirmPasswordLabel,
+                            hint: AppStrings.confirmPasswordHint,
+                            prefixIcon: Icons.lock_reset_rounded,
+                            isPassword: true,
+                            textInputAction: TextInputAction.done,
+                            validator: (value) =>
+                                Validators.validateConfirmPassword(
+                                  value,
+                                  _passwordController.text,
+                                ),
+                            onFieldSubmitted: (_) => _handleRegister(),
+                          ),
+                          SizedBox(height: fieldGap * 0.9),
+
+                          // Terms and Conditions checkbox
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _agreeToTerms = !_agreeToTerms;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(6),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: Checkbox(
+                                    value: _agreeToTerms,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        _agreeToTerms = val ?? false;
+                                      });
+                                    },
+                                    activeColor: AppColors.primary,
+                                    side: const BorderSide(
+                                      color: AppColors.primary,
+                                      width: 1.5,
+                                    ),
                                   ),
                                 ),
+                                const SizedBox(width: 8),
+                                const Expanded(
+                                  child: Text(
+                                    AppStrings.termsNotice,
+                                    style: TextStyle(
+                                      fontSize: 12.5,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: fieldGap * 1.8),
+
+                          // Register Action Button
+                          CustomButton(
+                            text: AppStrings.registerButton,
+                            height: 52,
+                            isLoading: authProvider.isLoading,
+                            onPressed: authProvider.isLoading
+                                ? null
+                                : _handleRegister,
+                          ),
+                          SizedBox(height: fieldGap * 1.5),
+
+                          // Footer: "Already have an Account ? Login"
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              const Text(
+                                AppStrings.alreadyHaveAccount,
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                              const SizedBox(width: 8),
-                              const Expanded(
-                                child: Text(
-                                  AppStrings.termsNotice,
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).pop(),
+                                child: const Text(
+                                  AppStrings.signIn,
                                   style: TextStyle(
-                                    fontSize: 12.5,
-                                    color: AppColors.textSecondary,
+                                    color: AppColors.primary,
+                                    fontSize: 13.5,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        SizedBox(height: fieldGap * 1.8),
-
-                        // Register Action Button
-                        CustomButton(
-                          text: AppStrings.registerButton,
-                          height: 52,
-                          isLoading: authProvider.isLoading,
-                          onPressed: authProvider.isLoading ? null : _handleRegister,
-                        ),
-                        SizedBox(height: fieldGap * 1.5),
-
-                        // Footer: "Already have an Account ? Login"
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            const Text(
-                              AppStrings.alreadyHaveAccount,
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () => Navigator.of(context).pop(),
-                              child: const Text(
-                                AppStrings.signIn,
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 13.5,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                      ],
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
   }
 }
