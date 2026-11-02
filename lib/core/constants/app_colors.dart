@@ -5,7 +5,7 @@ class AppColors {
   static const Color primary = Color(0xFFFF6E6E); // Coral Pink
   static const Color primaryLight = Color(0xFFFF8E8E); // Light Coral
   static const Color primaryDark = Color(0xFFE85050); // Deep Coral
-  
+
   // Header Wavy Colors
   static const Color headerTop = Color(0xFFFF8585);
   static const Color headerBottom = Color(0xFFFF6868);
