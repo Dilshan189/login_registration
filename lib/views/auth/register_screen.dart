@@ -119,13 +119,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0, top: 8.0),
+                    padding: const EdgeInsets.only(left: 8.0, top: 4.0),
                     child: IconButton(
                       icon: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
+                        Icons.chevron_left_rounded,
                         color: Colors.white,
-                        size: 22,
+                        size: 34,
                       ),
+                      tooltip: 'Back',
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
