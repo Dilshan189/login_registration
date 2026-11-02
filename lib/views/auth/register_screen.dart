@@ -111,9 +111,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final headerH = (screenH * 0.23).clamp(170.0, 220.0);
     final fieldGap = (screenH * 0.015).clamp(8.0, 14.0);
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
@@ -325,6 +328,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }

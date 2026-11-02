@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
@@ -64,11 +65,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final authProvider = context.watch<AuthProvider>();
     final horizontalPad = ResponsiveLayout.horizontalPadding(context);
     final headerH = ResponsiveLayout.headerHeight(context, defaultRatio: 0.24);
-    final verticalSpacing = ResponsiveLayout.verticalSpacing(context, defaultValue: 20.0);
+    final verticalSpacing = ResponsiveLayout.verticalSpacing(
+      context,
+      defaultValue: 20.0,
+    );
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
@@ -168,6 +175,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
